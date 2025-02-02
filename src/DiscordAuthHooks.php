@@ -169,7 +169,7 @@ class DiscordAuthHooks {
 
 		$userApproved = false;
 		try {
-			$userApproved = $this->checkDiscordUser( $user_info['discord_user_id'], $this->guildId, $this->config->get('DiscordApprovedRoles') );
+			$userApproved = $this->checkDiscordUser( $user_info['discord_user_id'], $this->guildId, $this->config->get('DiscordApprovedRoles'), $this->config->get('DiscordAllowAllUsers') );
 		} catch ( \Exception $e ) {
 		    $errorMessage = $e->getMessage();
 			return false;
@@ -199,14 +199,19 @@ class DiscordAuthHooks {
 	 * @param string $discordUserId
 	 * @param integer $discordGuildId
 	 * @param array $approvedRoleNames
+	 * @param bool $allowAllUsers
 	 * @throws \Psr\Container\ContainerExceptionInterface
 	 * @throws \Psr\Container\NotFoundExceptionInterface
 	 */
-	protected function checkDiscordUser(string $discordUserId, int $discordGuildId, array $approvedRoleNames ) {
+	protected function checkDiscordUser(string $discordUserId, int $discordGuildId, array $approvedRoleNames, bool $allowAllUsers ) {
 		LoggerFactory::getInstance( 'DiscordAuth' )->debug("Checking User {$discordUserId}");
 		$member = $this->discordClient->guild->getGuildMember(
 			['guild.id' => $discordGuildId, 'user.id' => (int) $discordUserId]
 		);
+
+		if ($allowAllUsers) {
+			return true;
+		}
 
 		$memberRolesJson = json_encode($member->roles);
 		LoggerFactory::getInstance( 'DiscordAuth' )->debug("Member has roles {$memberRolesJson}");

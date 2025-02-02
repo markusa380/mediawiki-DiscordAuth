@@ -48,7 +48,11 @@
 	  "value": [],
 	  "descriptionmsg": "Array of strings. An array of Discord Role names. Discord users with the following roles are allowed to login to wiki"
 	},
-    "DiscordCollectEmail": {
+	"DiscordAllowAllUsers": {
+		"value": false,
+		"descriptionmsg": "Allow all users no matter the role"
+	},
+  "DiscordCollectEmail": {
 	  "value": false,
 	  "descriptionmsg": "Boolean. This flag regulates whether the user's Discord email should be collected and used to create their wiki account"
 	},
